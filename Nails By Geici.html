@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nails By Geici - Gestão de Salão</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#25d366">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Nails By Geici">
+    <style>
+        :root {
+            --cor-bg: #f8fafc;
+            --cor-branco: #ffffff;
+            --cor-preto: #0f172a;
+            --cor-cinza: #64748b;
+            --cor-cinza-claro: #e2e8f0;
+            --cor-pastel-rosa: #fce7f3;
+            --cor-pastel-nude: #f1f5f9;
+            --cor-dourado: #10b981;
+            --cor-dourado-hover: #059669;
+            --cor-erro: #ef4444;
+            --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--cor-bg);
+            color: var(--cor-preto);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        aside {
+            order: 2;
+            width: 100%;
+            height: 65px;
+            background-color: var(--cor-branco);
+            border-top: 1px solid var(--cor-cinza-claro);
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            align-items: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .menu {
+            list-style: none;
+            display: flex;
+            width: 100%;
+            justify-content: space-around;
+            padding: 0 5px;
+        }
+
+        .menu li {
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            color: var(--cor-cinza);
+            font-size: 0.75rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+        }
+
+        .menu li.active {
+            background-color: #ecfdf5;
+            color: var(--cor-dourado-hover);
+            font-weight: 600;
+        }
+
+        .menu li i {
+            color: var(--cor-dourado);
+            font-size: 1.25rem;
+        }
+
+        main {
+            flex-grow: 1;
+            padding: 15px 15px 85px 15px;
+            overflow-y: auto;
+            background-color: var(--cor-bg);
+            order: 1;
+            width: 100%;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        h2 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--cor-preto);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2 i {
+            color: var(--cor-dourado);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--cor-branco);
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: var(--sombra);
+            border-left: 4px solid var(--cor-dourado);
+        }
+
+        .card.saida {
+            border-left-color: var(--cor-erro);
+        }
+
+        .card h3 {
+            font-size: 0.75rem;
+            color: var(--cor-cinza);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card p {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--cor-preto);
+        }
+
+        .form-container, .table-container {
+            background: var(--cor-branco);
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: var(--sombra);
+            margin-bottom: 20px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .form-container h3, .table-container h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            color: var(--cor-preto);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        label {
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: -4px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid var(--cor-cinza-claro);
+            border-radius: 8px;
+            outline: none;
+            font-size: 0.9rem;
+            background: var(--cor-branco);
+            color: var(--cor-preto);
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--cor-dourado);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+        }
+
+        /* CHECKLIST DE SERVIÇOS */
+        .checklist-container {
+            border: 1px solid var(--cor-cinza-claro);
+            border-radius: 8px;
+            padding: 10px 12px;
+            max-height: 160px;
+            overflow-y: auto;
+            background: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.875rem;
+            color: var(--cor-preto);
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 0;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--cor-dourado);
+            cursor: pointer;
+        }
+
+        /* BOTÕES OTIMIZADOS */
+        .btn-primary {
+            background-color: var(--cor-dourado);
+            color: var(--cor-branco);
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--cor-dourado-hover);
+        }
+
+        .btn-danger {
+            background-color: var(--cor-erro);
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-secondary {
+            background-color: #94a3b8;
+            color: #fff;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--cor-cinza-claro);
+            font-size: 0.85rem;
+        }
+
+        th {
+            background-color: var(--cor-pastel-nude);
+            color: #475569;
+            font-weight: 600;
+        }
+
+        .btn-acao {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            margin-right: 2px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            transition: transform 0.1s;
+        }
+
+        .btn-acao:active {
+            transform: scale(0.95);
+        }
+
+        .btn-editar { background-color: #0284c7; color: #fff; }
+        .btn-excluir { background-color: #ef4444; color: #fff; }
+        .btn-whats { background-color: #25d366; color: #fff; text-decoration: none; padding: 6px 10px; }
+
+        .sync-aviso {
+            font-size: 0.8rem;
+            color: var(--cor-cinza);
+            background: var(--cor-pastel-nude);
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sync-input-group {
+            display: flex;
+            gap: 6px;
+        }
+
+        .sync-input-group input {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+
+        .sync-input-group button {
+            width: auto;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+        }
+
+        .sync-aviso.oculto {
+            display: none;
+        }
+
+        .filtro-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .filtro-container select {
+            padding: 8px 10px;
+            font-size: 0.85rem;
+        }
+
+        .badge-status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+        .status-agendado { background-color: #f59e0b; color: #fff; }
+        .status-concluido { background-color: #10b981; color: #fff; }
+        .status-cancelado { background-color: #ef4444; color: #fff; }
+
+        .tag-tipo {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .tag-gasto { background-color: #fee2e2; color: #991b1b; }
+        .tag-investimento { background-color: #d1fae5; color: #065f46; }
+        .tag-custo { background-color: #fef3c7; color: #92400e; }
+    </style>
+</head>
+<body>
+
+    <aside>
+        <ul class="menu">
+            <li class="active" onclick="mudarAba('agenda', this)"><i class="fa-solid fa-calendar-days"></i> Agenda</li>
+            <li onclick="mudarAba('clientes', this)"><i class="fa-solid fa-user-group"></i> Clientes</li>
+            <li onclick="mudarAba('servicos', this)"><i class="fa-solid fa-hand-sparkles"></i> Serviços</li>
+            <li onclick="mudarAba('financeiro', this)"><i class="fa-solid fa-chart-pie"></i> Financeiro</li>
+        </ul>
+    </aside>
+
+    <main>
+        
+        <div class="sync-aviso" id="blocoSync">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-circle-dot" id="statusIcon" style="color: #f59e0b;"></i>
+                <span id="statusTexto">Cole a URL do Google Apps Script abaixo:</span>
+            </div>
+            <div class="sync-input-group">
+                <input type="text" id="scriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+                <button class="btn-primary" style="width:auto;" onclick="salvarUrlScript()"><i class="fa-solid fa-floppy-disk"></i></button>
+            </div>
+        </div>
+
+        <!-- ABA 1: AGENDA -->
+        <div id="tab-agenda" class="tab-content active">
+            <h2><i class="fa-solid fa-calendar-check"></i> Agenda</h2>
+            
+            <div class="form-container">
+                <h3>Novo Agendamento</h3>
+                <form id="formAgenda" onsubmit="adicionarAgendamento(event)">
+                    <div class="form-row">
+                        <div>
+                            <label>Data e Hora</label>
+                            <div style="display: flex; gap: 8px; margin-top: 4px;">
+                                <input type="date" id="agendamentoData" required>
+                                <input type="time" id="agendamentoHora" required>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Cliente</label>
+                            <select id="agendamentoCliente" style="margin-top:4px;" required>
+                                <option value="">Selecione a Cliente</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label>Serviços Selecionados</label>
+                            <div class="checklist-container" id="agendamentoServicosChecklist" style="margin-top:4px;">
+                                <!-- Gerado Dinamicamente -->
+                            </div>
+                        </div>
+
+                        <div>
+                            <label>Valor Total (R$)</label>
+                            <input type="text" id="agendamentoValor" placeholder="0,00" style="margin-top:4px;" required>
+                        </div>
+
+                        <div>
+                            <label>Status</label>
+                            <select id="agendamentoStatus" style="margin-top:4px;">
+                                <option value="Agendado">Agendado</option>
+                                <option value="Concluído">Concluído</option>
+                                <option value="Cancelado">Cancelado</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Agendar Horário</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <h3>Compromissos</h3>
+                <div class="filtro-container">
+                    <i class="fa-solid fa-filter" style="color: var(--cor-dourado);"></i>
+                    <select id="filtroAgenda" onchange="renderizarAgenda()">
+                        <option value="tudo">Ver Todos</option>
+                        <option value="hoje" selected>Hoje</option>
+                        <option value="semana">Próximos 7 dias</option>
+                        <option value="mes">Mês Atual</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Cliente</th>
+                                <th>Serviço(s)</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaAgenda"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 2: CLIENTES -->
+        <div id="tab-clientes" class="tab-content">
+            <h2><i class="fa-solid fa-users"></i> Clientes</h2>
+            
+            <div class="form-container">
+                <h3 id="tituloFormCliente">Cadastrar Cliente</h3>
+                <form id="formCliente" onsubmit="salvarCliente(event)">
+                    <input type="hidden" id="clienteIndex" value="">
+                    <div class="form-row">
+                        <input type="text" id="clienteNome" placeholder="Nome Completo" required>
+                        <input type="text" id="clienteTelefone" placeholder="WhatsApp (Ex: 19999999999)" required>
+                        <input type="email" id="clienteEmail" placeholder="E-mail" required>
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-save"></i> Salvar Cliente</button>
+                        <button type="button" id="btnCancelarEdicaoCliente" class="btn-primary btn-secondary" style="display:none;" onclick="cancelarEdicaoCliente()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <h3>Lista de Clientes</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Telefone</th>
+                                <th>E-mail</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaClientes"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 3: SERVIÇOS -->
+        <div id="tab-servicos" class="tab-content">
+            <h2><i class="fa-solid fa-hand-sparkles"></i> Serviços</h2>
+            
+            <div class="form-container">
+                <h3 id="tituloFormServico">Adicionar Serviço</h3>
+                <form id="formServico" onsubmit="salvarServico(event)">
+                    <input type="hidden" id="servicoIndex" value="">
+                    <div class="form-row">
+                        <input type="text" id="servicoNome" placeholder="Nome do Serviço" required>
+                        <button type="submit" class="btn-primary"><i class="fa-solid fa-plus"></i> Salvar Serviço</button>
+                        <button type="button" id="btnCancelarEdicaoServico" class="btn-primary btn-secondary" style="display:none;" onclick="cancelarEdicaoServico()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <h3>Disponíveis</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Serviço</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaServicos"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA 4: FINANCEIRO -->
+        <div id="tab-financeiro" class="tab-content">
+            <h2><i class="fa-solid fa-chart-pie"></i> Financeiro</h2>
+
+            <div class="filtro-container">
+                <i class="fa-solid fa-calendar-range" style="color: var(--cor-dourado);"></i>
+                <select id="filtroFinanceiro" onchange="atualizarFinanceiro()">
+                    <option value="hoje">Hoje</option>
+                    <option value="semana">Esta Semana</option>
+                    <option value="mes" selected>Este Mês</option>
+                    <option value="ano">Este Ano</option>
+                    <option value="tudo">Todo o Período</option>
+                </select>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Faturamento</h3>
+                    <p id="finTotal">R$ 0,00</p>
+                </div>
+                <div class="card saida">
+                    <h3>Saídas / Gastos</h3>
+                    <p id="finSaidas">R$ 0,00</p>
+                </div>
+                <div class="card">
+                    <h3>Lucro Líquido</h3>
+                    <p id="finLucro">R$ 0,00</p>
+                </div>
+            </div>
+
+            <div class="form-container">
+                <h3><i class="fa-solid fa-circle-minus" style="color:var(--cor-erro);"></i> Registrar Saída</h3>
+                <form id="formDespesa" onsubmit="adicionarDespesa(event)">
+                    <div class="form-row">
+                        <input type="date" id="despesaData" required>
+                        <input type="text" id="despesaDescricao" placeholder="Descrição (Ex: Esmaltes, Aluguel)" required>
+                        <input type="text" id="despesaValor" placeholder="Valor (R$)" required>
+                        <select id="despesaTipo" required>
+                            <option value="Gasto">Gasto Variável</option>
+                            <option value="Custo">Custo Fixo</option>
+                            <option value="Investimento">Investimento</option>
+                        </select>
+                        <button type="submit" class="btn-primary btn-danger"><i class="fa-solid fa-plus"></i> Registrar Saída</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-container">
+                <h3>Lançamentos de Saídas</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Descrição</th>
+                                <th>Tipo</th>
+                                <th>Valor</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaDespesas"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <h3>Entradas (Atendimentos Concluídos)</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Serviço(s)</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelaFinanceiro"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let WEB_APP_URL = localStorage.getItem('geici_script_url') || '';
+
+        let clientes = JSON.parse(localStorage.getItem('geici_clientes')) || [
+            { nome: "Ana Souza", telefone: "19998887766", email: "ana@email.com" }
+        ];
+        let servicos = JSON.parse(localStorage.getItem('geici_servicos')) || [
+            { nome: "Manicure" }, { nome: "Pedicure" }, { nome: "Unha em Gel" }
+        ];
+        let agenda = JSON.parse(localStorage.getItem('geici_agenda')) || [];
+        let despesas = JSON.parse(localStorage.getItem('geici_despesas')) || [];
+
+        function formatarDataHora(dataRaw, horaRaw) {
+            let dataStr = "";
+            let horaStr = horaRaw || "";
+
+            if (dataRaw) {
+                if (dataRaw.includes('T')) {
+                    let d = new Date(dataRaw);
+                    if (!isNaN(d.getTime())) {
+                        dataStr = d.toISOString().split('T')[0];
+                    } else {
+                        dataStr = dataRaw.split('T')[0];
+                    }
+                } else {
+                    dataStr = dataRaw;
+                }
+            }
+
+            if (horaStr && horaStr.includes('T')) {
+                let h = new Date(horaStr);
+                if (!isNaN(h.getTime())) {
+                    horaStr = h.toTimeString().substring(0, 5);
+                } else {
+                    horaStr = horaStr.split('T')[1]?.substring(0, 5) || horaStr;
+                }
+            }
+
+            return { data: dataStr, hora: horaStr };
+        }
+
+        function formatarDataExibicao(dataIso) {
+            if (!dataIso) return '';
+            let partes = dataIso.split('-');
+            if (partes.length === 3) return `${partes[2]}/${partes[1]}/${partes[0]}`;
+            return dataIso;
+        }
+
+        function salvarUrlScript() {
+            const url = document.getElementById('scriptUrl').value.trim();
+            if (url) {
+                localStorage.setItem('geici_script_url', url);
+                WEB_APP_URL = url;
+                carregarDadosDaNuvem();
+            }
+        }
+
+        function atualizarStatusConexao(status, msg) {
+            const icon = document.getElementById('statusIcon');
+            const texto = document.getElementById('statusTexto');
+            const bloco = document.getElementById('blocoSync');
+
+            if (status === 'sucesso') {
+                icon.style.color = '#10b981';
+                texto.innerText = msg || 'Sincronizado com o Google Planilhas!';
+                setTimeout(() => { if(bloco) bloco.classList.add('oculto'); }, 3000);
+            } else if (status === 'carregando') {
+                if(bloco) bloco.classList.remove('oculto');
+                icon.style.color = '#0284c7';
+                texto.innerText = msg || 'Conectando...';
+            } else {
+                if(bloco) bloco.classList.remove('oculto');
+                icon.style.color = '#ef4444';
+                texto.innerText = msg || 'Usando modo offline. Verifique o link.';
+            }
+        }
+
+        async function carregarDadosDaNuvem() {
+            if (!WEB_APP_URL) return;
+            atualizarStatusConexao('carregando', 'Lendo dados do Google Planilhas...');
+            try {
+                const res = await fetch(WEB_APP_URL + '?action=read');
+                const data = await res.json();
+                if (data.status === 'success') {
+                    clientes = data.clientes || clientes;
+                    servicos = data.servicos || servicos;
+                    agenda = data.agenda || agenda;
+                    despesas = data.despesas || despesas;
+                    salvarLocalStorage();
+                    atualizarTabelas();
+                    atualizarStatusConexao('sucesso', 'Conectado e Sincronizado!');
+                } else {
+                    atualizarStatusConexao('erro', 'Erro de resposta da planilha.');
+                }
+            } catch (err) {
+                console.error(err);
+                atualizarStatusConexao('erro', 'Não foi possível ler da planilha. Dados mantidos no celular.');
+            }
+        }
+
+        async function enviarDadosParaNuvem() {
+            salvarLocalStorage();
+            if (!WEB_APP_URL) return;
+
+            atualizarStatusConexao('carregando', 'Enviando alterações...');
+            
+            const payloadData = JSON.stringify({
+                clientes: clientes,
+                servicos: servicos,
+                agenda: agenda,
+                despesas: despesas
+            });
+
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ payload: payloadData })
+                });
+                atualizarStatusConexao('sucesso', 'Salvo no Google Planilhas!');
+            } catch (err) {
+                console.error(err);
+                atualizarStatusConexao('erro', 'Erro ao salvar. Salvo apenas neste aparelho.');
+            }
+        }
+
+        function salvarLocalStorage() {
+            localStorage.setItem('geici_clientes', JSON.stringify(clientes));
+            localStorage.setItem('geici_servicos', JSON.stringify(servicos));
+            localStorage.setItem('geici_agenda', JSON.stringify(agenda));
+            localStorage.setItem('geici_despesas', JSON.stringify(despesas));
+        }
+
+        function mudarAba(abaId, elemento) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.menu li').forEach(li => li.classList.remove('active'));
+            
+            document.getElementById('tab-' + abaId).classList.add('active');
+            elemento.classList.add('active');
+
+            if(abaId === 'financeiro') atualizarFinanceiro();
+        }
+
+        /* CLIENTES */
+        function salvarCliente(e) {
+            e.preventDefault();
+            const index = document.getElementById('clienteIndex').value;
+            const nome = document.getElementById('clienteNome').value;
+            const telefone = document.getElementById('clienteTelefone').value;
+            const email = document.getElementById('clienteEmail').value;
+
+            if(index === "") {
+                clientes.push({ nome, telefone, email });
+            } else {
+                clientes[index] = { nome, telefone, email };
+                cancelarEdicaoCliente();
+            }
+
+            enviarDadosParaNuvem();
+            document.getElementById('formCliente').reset();
+            atualizarTabelas();
+        }
+
+        function renderizarClientes() {
+            const tbody = document.getElementById('tabelaClientes');
+            tbody.innerHTML = "";
+            clientes.forEach((c, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${c.nome}</td>
+                        <td>${c.telefone}</td>
+                        <td>${c.email}</td>
+                        <td>
+                            <button class="btn-acao btn-editar" onclick="editarCliente(${idx})"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-acao btn-excluir" onclick="excluirCliente(${idx})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            atualizarSelects();
+        }
+
+        function editarCliente(idx) {
+            document.getElementById('clienteIndex').value = idx;
+            document.getElementById('clienteNome').value = clientes[idx].nome;
+            document.getElementById('clienteTelefone').value = clientes[idx].telefone;
+            document.getElementById('clienteEmail').value = clientes[idx].email;
+            document.getElementById('tituloFormCliente').innerText = "Editar Cliente";
+            document.getElementById('btnCancelarEdicaoCliente').style.display = "inline-flex";
+        }
+
+        function cancelarEdicaoCliente() {
+            document.getElementById('clienteIndex').value = "";
+            document.getElementById('formCliente').reset();
+            document.getElementById('tituloFormCliente').innerText = "Cadastrar Cliente";
+            document.getElementById('btnCancelarEdicaoCliente').style.display = "none";
+        }
+
+        function excluirCliente(idx) {
+            if(confirm("Deseja realmente excluir esta cliente?")) {
+                clientes.splice(idx, 1);
+                enviarDadosParaNuvem();
+                atualizarTabelas();
+            }
+        }
+
+        /* SERVIÇOS */
+        function salvarServico(e) {
+            e.preventDefault();
+            const index = document.getElementById('servicoIndex').value;
+            const nome = document.getElementById('servicoNome').value;
+
+            if (index === "") {
+                servicos.push({ nome });
+            } else {
+                servicos[index] = { nome };
+                cancelarEdicaoServico();
+            }
+
+            enviarDadosParaNuvem();
+            document.getElementById('formServico').reset();
+            atualizarTabelas();
+        }
+
+        function renderizarServicos() {
+            const tbody = document.getElementById('tabelaServicos');
+            tbody.innerHTML = "";
+            servicos.forEach((s, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${s.nome}</td>
+                        <td>
+                            <button class="btn-acao btn-editar" onclick="editarServico(${idx})"><i class="fa-solid fa-pen"></i></button>
+                            <button class="btn-acao btn-excluir" onclick="excluirServico(${idx})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+            atualizarSelects();
+        }
+
+        function editarServico(idx) {
+            document.getElementById('servicoIndex').value = idx;
+            document.getElementById('servicoNome').value = servicos[idx].nome;
+            document.getElementById('tituloFormServico').innerText = "Editar Serviço";
+            document.getElementById('btnCancelarEdicaoServico').style.display = "inline-flex";
+        }
+
+        function cancelarEdicaoServico() {
+            document.getElementById('servicoIndex').value = "";
+            document.getElementById('formServico').reset();
+            document.getElementById('tituloFormServico').innerText = "Adicionar Serviço";
+            document.getElementById('btnCancelarEdicaoServico').style.display = "none";
+        }
+
+        function excluirServico(idx) {
+            if (confirm("Deseja excluir este serviço?")) {
+                servicos.splice(idx, 1);
+                enviarDadosParaNuvem();
+                atualizarTabelas();
+            }
+        }
+
+        function atualizarSelects() {
+            // Atualiza select de Clientes
+            const selectCliente = document.getElementById('agendamentoCliente');
+            selectCliente.innerHTML = '<option value="">Selecione a Cliente</option>';
+            clientes.forEach(c => {
+                selectCliente.innerHTML += `<option value="${c.nome}" data-tel="${c.telefone}">${c.nome}</option>`;
+            });
+
+            // Atualiza checklist de Serviços
+            const checklistContainer = document.getElementById('agendamentoServicosChecklist');
+            checklistContainer.innerHTML = '';
+            if (servicos.length === 0) {
+                checklistContainer.innerHTML = '<span style="font-size:0.8rem; color:var(--cor-cinza);">Nenhum serviço cadastrado.</span>';
+            } else {
+                servicos.forEach((s, i) => {
+                    checklistContainer.innerHTML += `
+                        <label class="checklist-item">
+                            <input type="checkbox" name="servicosCheck" value="${s.nome}">
+                            <span>${s.nome}</span>
+                        </label>
+                    `;
+                });
+            }
+        }
+
+        /* AGENDA */
+        function adicionarAgendamento(e) {
+            e.preventDefault();
+            const data = document.getElementById('agendamentoData').value;
+            const hora = document.getElementById('agendamentoHora').value;
+            const cliente = document.getElementById('agendamentoCliente').value;
+            
+            // Pega os serviços marcados no Checklist
+            const checkboxes = document.querySelectorAll('input[name="servicosCheck"]:checked');
+            const servicosSelecionados = Array.from(checkboxes).map(cb => cb.value).join(', ');
+
+            if (!servicosSelecionados) {
+                alert("Por favor, selecione pelo menos um serviço.");
+                return;
+            }
+
+            const valor = document.getElementById('agendamentoValor').value;
+            const status = document.getElementById('agendamentoStatus').value;
+
+            const selectClienteEl = document.getElementById('agendamentoCliente');
+            const telCliente = selectClienteEl.options[selectClienteEl.selectedIndex]?.getAttribute('data-tel') || '';
+
+            agenda.push({ data, hora, cliente, servico: servicosSelecionados, valor, status, telefone: telCliente });
+            enviarDadosParaNuvem();
+            document.getElementById('formAgenda').reset();
+            
+            // Uncheck nos serviços
+            document.querySelectorAll('input[name="servicosCheck"]').forEach(cb => cb.checked = false);
+
+            renderizarAgenda();
+        }
+
+        function alterarStatusAgenda(idx, novoStatus) {
+            agenda[idx].status = novoStatus;
+            enviarDadosParaNuvem();
+            renderizarAgenda();
+        }
+
+        function renderizarAgenda() {
+            const tbody = document.getElementById('tabelaAgenda');
+            tbody.innerHTML = "";
+
+            const filtro = document.getElementById('filtroAgenda').value;
+            const hoje = new Date().toISOString().split('T')[0];
+
+            let agendaFiltrada = agenda.filter(item => {
+                let dt = formatarDataHora(item.data, item.hora).data;
+                if (filtro === 'hoje') return dt === hoje;
+                if (filtro === 'semana') {
+                    let d = new Date(dt);
+                    let h = new Date(hoje);
+                    let diffDays = (d - h) / (1000 * 3600 * 24);
+                    return diffDays >= 0 && diffDays <= 7;
+                }
+                if (filtro === 'mes') {
+                    return dt.substring(0, 7) === hoje.substring(0, 7);
+                }
+                return true;
+            });
+
+            agendaFiltrada.forEach((item) => {
+                let idxOriginal = agenda.indexOf(item);
+                let dtHoraClean = formatarDataHora(item.data, item.hora);
+                let dataFormatada = formatarDataExibicao(dtHoraClean.data);
+                
+                const mensagemWhats = encodeURIComponent(`Olá ${item.cliente}! Confirmando seu agendamento de ${item.servico} para o dia ${dataFormatada} às ${dtHoraClean.hora} no Nails By Geici. ✨`);
+                const linkWhats = item.telefone ? `https://wa.me/55${item.telefone}?text=${mensagemWhats}` : `#`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${dataFormatada}<br><small style="color:var(--cor-cinza);">${dtHoraClean.hora}</small></td>
+                        <td>${item.cliente}</td>
+                        <td>${item.servico}</td>
+                        <td>R$ ${item.valor}</td>
+                        <td>
+                            <select onchange="alterarStatusAgenda(${idxOriginal}, this.value)" class="badge-status ${item.status === 'Concluído' ? 'status-concluido' : item.status === 'Cancelado' ? 'status-cancelado' : 'status-agendado'}">
+                                <option value="Agendado" ${item.status === 'Agendado' ? 'selected' : ''}>Agendado</option>
+                                <option value="Concluído" ${item.status === 'Concluído' ? 'selected' : ''}>Concluído</option>
+                                <option value="Cancelado" ${item.status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                            </select>
+                        </td>
+                        <td>
+                            ${item.telefone ? `<a href="${linkWhats}" target="_blank" class="btn-acao btn-whats"><i class="fa-brands fa-whatsapp"></i></a>` : ''}
+                            <button class="btn-acao btn-excluir" onclick="excluirAgenda(${idxOriginal})"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function excluirAgenda(idx) {
+            if (confirm("Remover este agendamento?")) {
+                agenda.splice(idx, 1);
+                enviarDadosParaNuvem();
+                renderizarAgenda();
+            }
+        }
+
+        /* FINANCEIRO & DESPESAS */
+        function adicionarDespesa(e) {
+            e.preventDefault();
+            const data = document.getElementById('despesaData').value;
+            const descricao = document.getElementById('despesaDescricao').value;
+            const valor = document.getElementById('despesaValor').value;
+            const tipo = document.getElementById('despesaTipo').value;
+
+            despesas.push({ data, descricao, valor, tipo });
+            enviarDadosParaNuvem();
+            document.getElementById('formDespesa').reset();
+            atualizarFinanceiro();
+        }
+
+        function excluirDespesa(idx) {
+            if (confirm("Remover esta despesa?")) {
+                despesas.splice(idx, 1);
+                enviarDadosParaNuvem();
+                atualizarFinanceiro();
+            }
+        }
+
+        function dentroDoPeríodo(dataIso, filtro) {
+            if (!dataIso) return false;
+            let hoje = new Date().toISOString().split('T')[0];
+            
+            if (filtro === 'hoje') return dataIso === hoje;
+            if (filtro === 'mes') return dataIso.substring(0, 7) === hoje.substring(0, 7);
+            if (filtro === 'ano') return dataIso.substring(0, 4) === hoje.substring(0, 4);
+            if (filtro === 'semana') {
+                let d = new Date(dataIso);
+                let h = new Date(hoje);
+                let diffDays = (h - d) / (1000 * 3600 * 24);
+                return diffDays >= 0 && diffDays <= 7;
+            }
+            return true;
+        }
+
+        function atualizarFinanceiro() {
+            const filtro = document.getElementById('filtroFinanceiro').value;
+            
+            // Entradas
+            const tbodyEntradas = document.getElementById('tabelaFinanceiro');
+            tbodyEntradas.innerHTML = "";
+            let totalFaturamento = 0;
+
+            agenda.forEach(item => {
+                let dtClean = formatarDataHora(item.data, item.hora).data;
+                if (item.status === 'Concluído' && dentroDoPeríodo(dtClean, filtro)) {
+                    let val = parseFloat(item.valor.replace(',', '.')) || 0;
+                    totalFaturamento += val;
+
+                    tbodyEntradas.innerHTML += `
+                        <tr>
+                            <td>${formatarDataExibicao(dtClean)}</td>
+                            <td>${item.cliente}</td>
+                            <td>${item.servico}</td>
+                            <td>R$ ${item.valor}</td>
+                        </tr>
+                    `;
+                }
+            });
+
+            // Saídas
+            const tbodySaidas = document.getElementById('tabelaDespesas');
+            tbodySaidas.innerHTML = "";
+            let totalSaidas = 0;
+
+            despesas.forEach((d, idx) => {
+                let dtClean = formatarDataHora(d.data, '').data;
+                if (dentroDoPeríodo(dtClean, filtro)) {
+                    let val = parseFloat(d.valor.replace(',', '.')) || 0;
+                    totalSaidas += val;
+
+                    let tagClass = d.tipo === 'Gasto' ? 'tag-gasto' : d.tipo === 'Investimento' ? 'tag-investimento' : 'tag-custo';
+
+                    tbodySaidas.innerHTML += `
+                        <tr>
+                            <td>${formatarDataExibicao(dtClean)}</td>
+                            <td>${d.descricao}</td>
+                            <td><span class="tag-tipo ${tagClass}">${d.tipo}</span></td>
+                            <td>R$ ${d.valor}</td>
+                            <td><button class="btn-acao btn-excluir" onclick="excluirDespesa(${idx})"><i class="fa-solid fa-trash"></i></button></td>
+                        </tr>
+                    `;
+                }
+            });
+
+            let lucroLiquido = totalFaturamento - totalSaidas;
+
+            document.getElementById('finTotal').innerText = `R$ ${totalFaturamento.toFixed(2).replace('.', ',')}`;
+            document.getElementById('finSaidas').innerText = `R$ ${totalSaidas.toFixed(2).replace('.', ',')}`;
+            document.getElementById('finLucro').innerText = `R$ ${lucroLiquido.toFixed(2).replace('.', ',')}`;
+        }
+
+        function atualizarTabelas() {
+            renderizarClientes();
+            renderizarServicos();
+            renderizarAgenda();
+            atualizarFinanceiro();
+        }
+
+        window.onload = () => {
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('agendamentoData').value = hoje;
+            document.getElementById('despesaData').value = hoje;
+            
+            atualizarTabelas();
+            if (WEB_APP_URL) {
+                document.getElementById('scriptUrl').value = WEB_APP_URL;
+                carregarDadosDaNuvem();
+            }
+        };
+    </script>
+</body>
+</html>
